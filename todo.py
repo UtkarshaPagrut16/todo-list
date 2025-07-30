@@ -1,13 +1,18 @@
-# Simple To-Do List
+from flask import Flask, render_template, request, redirect
 
-todo_list = []
+app = Flask(__name__)
+tasks = []
 
-while True:
-    task = input("Enter a task (or 'exit' to quit): ")
-    if task.lower() == 'exit':
-        break
-    todo_list.append(task)
+@app.route('/')
+def index():
+    return render_template('index.html', tasks=tasks)
 
-print("\nYour To-Do List:")
-for i, task in enumerate(todo_list, 1):
-    print(f"{i}. {task}")
+@app.route('/add', methods=['POST'])
+def add():
+    task = request.form.get('task')
+    if task:
+        tasks.append(task)
+    return redirect('/')
+
+if __name__ == '__main__':
+    app.run(debug=True)
